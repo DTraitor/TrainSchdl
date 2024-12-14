@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="TrainScheduleButCooloer.Interface.WagonsTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:TrainScheduleButCooloer.models">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Search Bar -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10">
+            <TextBox x:Name="SearchTextBox" Width="200" Margin="0,0,10,0" />
+            <Button Content="Search" Click="SearchButton_Click" />
+        </StackPanel>
+
+        <!-- DataGrid -->
+        <DataGrid x:Name="WagonsDataGrid" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding Wagons}" Grid.Row="1" HorizontalAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding WagonID}" IsReadOnly="True" Width="*" />
+                <DataGridTextColumn Header="Wagon Type" Binding="{Binding WagonType}" Width="*" />
+                <DataGridTextColumn Header="Load Capacity" Binding="{Binding LoadCapacity}" Width="*" />
+                <DataGridTextColumn Header="Current Status" Binding="{Binding CurrentStatus}" Width="*" />
+                <DataGridTemplateColumn Header="Assigned Train">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type models:Wagon}">
+                            <ComboBox ItemsSource="{Binding DbContext.Trains, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      DisplayMemberPath="Name"
+                                      SelectedValuePath="TrainID"
+                                      SelectedValue="{Binding AssignedTrainID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Delete" Click="DeleteWagon"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Click="SaveButton" FontSize="20" Content="Save" Width="60" Grid.Row="2" HorizontalAlignment="Left" Margin="10"/>
+    </Grid>
+</UserControl>

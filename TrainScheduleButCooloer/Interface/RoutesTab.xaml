@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="TrainScheduleButCooloer.Interface.RoutesTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:models="clr-namespace:TrainScheduleButCooloer.models">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Search Bar -->
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="10">
+            <TextBox x:Name="SearchTextBox" Width="200" Margin="0,0,10,0" />
+            <Button Content="Search" Click="SearchButton_Click" />
+        </StackPanel>
+
+        <!-- DataGrid -->
+        <DataGrid x:Name="RoutesDataGrid" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding Routes}" Grid.Row="1" HorizontalAlignment="Stretch">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding RouteID}" IsReadOnly="True" Width="*" />
+                <DataGridTemplateColumn Header="Origin Station">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type models:Route}">
+                            <ComboBox ItemsSource="{Binding DbContext.Stations, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      DisplayMemberPath="StationName"
+                                      SelectedValuePath="StationID"
+                                      SelectedValue="{Binding OriginStationId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Destination Station">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate DataType="{x:Type models:Route}">
+                            <ComboBox ItemsSource="{Binding DbContext.Stations, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      DisplayMemberPath="StationName"
+                                      SelectedValuePath="StationID"
+                                      SelectedValue="{Binding DestinationStationId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Distance" Binding="{Binding Distance}" Width="*" />
+                <DataGridTextColumn Header="Estimated Time" Binding="{Binding EstimatedTime}" Width="*" />
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Delete" Click="DeleteRoute"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Click="SaveButton" FontSize="20" Content="Save" Width="60" Grid.Row="2" HorizontalAlignment="Left" Margin="10"/>
+    </Grid>
+</UserControl>
